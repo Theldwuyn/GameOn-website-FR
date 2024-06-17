@@ -42,11 +42,11 @@ const everyAlphaNumFields = document.querySelectorAll(
   "input[type=text], input[type=email], input[type=date], input[type=number]");
 const everyBtnRadio = document.querySelectorAll("input[type=radio]");
 const requiredCheckboxBtn = document.getElementById("checkbox1");
-const confirmPopup = document.getElementById("valid");
+const confirmationPopup = document.querySelector(".valid");
 
 // Display popup form
 function displayConfirmPopup() {
-  confirmPopup.style.display = "flex";
+  confirmationPopup.style.display = "flex";
 }
 
 /**
@@ -57,7 +57,7 @@ function displayConfirmPopup() {
  * @param {HTMLElement} input 
  * @returns bool
  */
-function validateName(input) {
+function parseTextInput(input) {
   let inputValue = input.value;
   if (!textReg.test(inputValue)) {
     input.parentElement.setAttribute("data-error", "Veuillez entrer 2 caractères alphabétique ou plus");
@@ -71,13 +71,13 @@ function validateName(input) {
 
 /**
  * Cette fonction récupère la valeur de l'element HTML
- * On compare avec l'expression régulière mailReg
+ * et la compare avec l'expression régulière mailReg
  * Si le test est false, ajoute une paire d'attribut à l'element parent
  * pour afficher un message d'avertissement et retourne false
  * @param {HTMLElement} input 
  * @returns bool
  */
-function validateEmail(input) {
+function parseEmailInput(input) {
   let inputMail = input.value;
   if(!mailReg.test(inputMail)) {
     input.parentElement.setAttribute("data-error", "Veuillez renseigner une adresse mail valide");
@@ -90,14 +90,14 @@ function validateEmail(input) {
 }
 
 /**
- * Cette fonction récupère la valeur de l'element HTML et on construit une 
+ * Cette fonction récupère la valeur de l'element HTML et construit une 
  * instance Date "date" avec cette valeur. La fonction test si date est un nombre.
  * Si isNaN retourne true, la date est invalide, ajoute une paire d'attribut
- * à l'element parent pour afficher un message d'avertissement et on retourne false
+ * à l'element parent pour afficher un message d'avertissement et retourne false
  * @param {HTMLElement} input 
  * @returns bool
  */
-function validateDate(input) {
+function parseDateInput(input) {
   let date = new Date(input.value);
   if (isNaN(date.getTime())) {
     input.parentElement.setAttribute("data-error", "Veuillez entrer votre date de naissance");
@@ -117,7 +117,7 @@ function validateDate(input) {
  * @param {HTMLElement} input 
  * @returns bool
  */
-function validateQuantity(input) {
+function parseNumberInput(input) {
   let inputValue = input.value;
   if (!quantityReg.test(inputValue)) {
     input.parentElement.setAttribute("data-error", "Veuillez entrer un nombrer compris entre 1 et 99");
@@ -138,13 +138,13 @@ function validateQuantity(input) {
 function parseAllAlphaNumField(input) {
   switch (input.getAttribute("type")) {
     case "text":
-      return validateName(input);
+      return parseTextInput(input);
     case "email":
-      return validateEmail(input);
+      return parseEmailInput(input);
     case "date":
-      return validateDate(input);
+      return parseDateInput(input);
     case "number":
-      return validateQuantity(input);
+      return parseNumberInput(input);
     default:
       return false;
   }
@@ -157,7 +157,7 @@ function parseAllAlphaNumField(input) {
  * @param {NodeListOf<Element>} allRadioBtn nodelist de l'ensemble des boutons radios
  * @returns bool
  */
-function validateRadio(allRadioBtn) {
+function parseRadioInput(allRadioBtn) {
   let radioChecked = null;
   for(let i = 0; i < allRadioBtn.length; i++) {
     if (allRadioBtn[i].checked) {
@@ -181,7 +181,7 @@ function validateRadio(allRadioBtn) {
  * @param {HTMLElement} input 
  * @returns bool
  */
-function isREquiredChecked(input) {
+function isREquiredInputChecked(input) {
   if (!input.checked) {
     input.parentElement.setAttribute("data-error", "Vous devez accepter les conditions d'utilisation");
     input.parentElement.setAttribute("data-error-visible", "true");
@@ -221,8 +221,8 @@ function validate(alphaNumFields, btnRadio, btnRequired) {
   for(let i = 0; i < alphaNumFields.length; i++) {
     boolFromValidation.push(parseAllAlphaNumField(alphaNumFields[i]));
   }
-  boolFromValidation.push(validateRadio(btnRadio));
-  boolFromValidation.push(isREquiredChecked(btnRequired));
+  boolFromValidation.push(parseRadioInput(btnRadio));
+  boolFromValidation.push(isREquiredInputChecked(btnRequired));
 
   if (isAllTrue(boolFromValidation)) {
     displayConfirmPopup();

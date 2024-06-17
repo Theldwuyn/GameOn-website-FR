@@ -528,7 +528,7 @@ footer {
   }
 }
 
-#valid {
+.valid {
   display: none;
   flex-direction: column;
   justify-content: center;
@@ -541,13 +541,13 @@ footer {
   background-color: #232323;
 }
 
-#valid span {
+.valid span {
   margin: 0 30px;
   font-size: 150%;
   text-align: center;
 }
 
-#close-modal {
+.close-modal {
   position: absolute;
   bottom: 30px;
 }
